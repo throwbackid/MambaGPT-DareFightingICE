@@ -1,0 +1,201 @@
+diff --git a/ai/agent.py b/ai/agent.py
+index 65ecc8c..3044adc 100644
+--- a/ai/agent.py
++++ b/ai/agent.py
+@@ -27,7 +27,7 @@ STATE_DIM = {
+     1: {"conv1d": 160, "fft": 512, "mel": 2560},
+     4: {"conv1d": 64, "fft": 512, "mel": 1280},
+ }
+-DEBUG = False
++DEBUG = True
+ 
+ 
+ class LLMAgent(AIInterface):
+@@ -99,7 +99,7 @@ class LLMAgent(AIInterface):
+                 device="cuda",
+                 use_quantization="auto",
+                 tensor_parallel_size=1,
+-                gpu_memory_utilization=0.75,  # Reduce memory usage
++                gpu_memory_utilization=0.35,  # Reduce memory usage
+                 max_model_len=2048,           # Maximum length
+                 enable_prefix_caching=False,
+                 enforce_eager=True,
+diff --git a/ai/prompt.py b/ai/prompt.py
+index 0f9fb9e..2c4323e 100644
+--- a/ai/prompt.py
++++ b/ai/prompt.py
+@@ -1,13 +1,7 @@
+ from abc import abstractmethod
+-
+-from pyftg.models.frame_data import FrameData, CharacterData, AttackData
+ import json
+-import pandas as pd
+-import os
+-import yaml
+-from loguru import logger
+-
+ 
++from pyftg.models.frame_data import FrameData, CharacterData, AttackData
+ 
+ 
+ class BasePrompt:
+@@ -20,19 +14,20 @@ class BasePrompt:
+     ) -> str:
+         pass
+ 
+-# 在 prompt.py 中添加这个类 #修改这里
++
+ class CustomPromptGenerator(BasePrompt):
+     def __init__(self):
+         super().__init__()
+-        
++
+     def frame_data_to_json(
+         self, frame_data: FrameData, player: bool, reward: float = 0
+     ) -> dict:
+-        json_data = {}
+         self_player = frame_data.get_character(player)
+         self_player_json = self.character_data_to_json(self_player)
++
+         opp_player = frame_data.get_character(not player)
+         opp_player_json = self.character_data_to_json(opp_player)
++
+         self_projectiles = [
+             self.attack_data_to_json(a)
+             for a in frame_data.get_projectiles_by_player(player)
+@@ -41,51 +36,49 @@ class CustomPromptGenerator(BasePrompt):
+             self.attack_data_to_json(a)
+             for a in frame_data.get_projectiles_by_player(not player)
+         ]
++
+         self_player_json["projectiles"] = self_projectiles
+         opp_player_json["projectiles"] = opp_projectiles
+-        json_data = {
++
++        return {
+             "opponent": opp_player_json,
+             "self": self_player_json,
+-            "frame num": frame_data.current_frame_number,
+         }
+-        return json_data
+ 
+     def character_data_to_json(self, character_data: CharacterData) -> dict:
+-        data_json = {
+-            "remaining frames": character_data.remaining_frame,
++        return {
++            "remaining_frames": character_data.remaining_frame,
+             "hp": character_data.hp,
+             "action": character_data.action.name,
+             "state": character_data.state.name,
+             "position": {
+-                "left": character_data.left,
+-                "right": character_data.right,
+                 "top": character_data.top,
++                "left": character_data.left,
+                 "bottom": character_data.bottom,
++                "right": character_data.right,
++            },
++            "speed": {
++                "x": character_data.speed_x,
++                "y": character_data.speed_y,
+             },
+-            "speed": {"x": character_data.speed_x, "y": character_data.speed_y},
+             "energy": character_data.energy,
+         }
+-        return data_json
+ 
+     def attack_data_to_json(self, attack_data: AttackData) -> dict:
+-        attack_data_json = {
++        return {
+             "damage": attack_data.hit_damage,
+             "left": attack_data.current_hit_area.left,
+             "right": attack_data.current_hit_area.right,
+             "bottom": attack_data.current_hit_area.bottom,
+             "top": attack_data.current_hit_area.top,
+-            "speed": {"x": attack_data.speed_x, "y": attack_data.speed_y},
++            "speed": {
++                "x": attack_data.speed_x,
++                "y": attack_data.speed_y,
++            },
+         }
+-        return attack_data_json
+ 
+     def generate_prompt(
+         self, frame_data: FrameData, player: bool, reward: float
+     ) -> str:
+         game_state = self.frame_data_to_json(frame_data, player, reward)
+-# change prompt here
+-        prompt = f"""You are the best in a 2D fighting game.
+-
+-{json.dumps(game_state, indent=4)}
+-----
+-Reply with only one move. Follow ZONING fighting style. And explain why you choose it."""
+-        return prompt
++        return json.dumps(game_state, ensure_ascii=False, separators=(",", ":"))
+diff --git a/llm_local.py b/llm_local.py
+index fcaa55f..8bee6eb 100644
+--- a/llm_local.py
++++ b/llm_local.py
+@@ -68,10 +68,11 @@ from difflib import SequenceMatcher
+ from llm import LLM
+ from typing import List, Optional, Dict
+ 
+-# Set environment variables to resolve Triton compatibility issues
+-os.environ["VLLM_ATTENTION_BACKEND"] = "FLASH_ATTN"  # FLASH_ATTN backend
++os.environ["VLLM_USE_V0"] = "1" 
++# This is the new way to force the backend to avoid the Triton error
++os.environ["VLLM_ATTENTION_BACKEND"] = "XFORMERS"
+ os.environ["TRITON_PTXAS_PATH"] = "/usr/local/cuda/bin/ptxas"  # Ensure the PTXAS path is correct.
+-os.environ["CUDA_VISIBLE_DEVICES"] = "0,1"  # Explicitly specify the GPU.
++os.environ["CUDA_VISIBLE_DEVICES"] = "1"  # Explicitly specify the GPU.
+ 
+ DEBUG = False  # Set to True to enable debug logs
+ 
+@@ -94,7 +95,7 @@ class LocalLLaMA(LLM):
+         device: str = "cuda",
+         use_quantization: str = "auto",
+         tensor_parallel_size: int = 1,
+-        gpu_memory_utilization: float = 0.9,
++        gpu_memory_utilization: float = 0.5,
+         max_model_len: Optional[int] = None,
+         enable_prefix_caching: bool = True,
+         enforce_eager: Optional[bool] = None,
+@@ -140,11 +141,7 @@ class LocalLLaMA(LLM):
+         )
+ 
+         # Default instruction (consistent with training data)
+-        self.default_instruction = (
+-            "You are the best and most aggressive player in a "
+-            "2D fighting video game. You will receive the "
+-            "game state and must choose the best action."
+-        )
++        self.default_instruction = "Predict the next FightingICE action."
+ 
+         # Initialize output collector (only if data collection is enabled)
+         if ENABLE_DATA_COLLECTION:
+@@ -212,6 +209,9 @@ class LocalLLaMA(LLM):
+                 "dtype": "half",
+                 "tokenizer_mode": "auto",
+                 "disable_log_stats": True,
++                # Force Eager Mode: This mimics the stability of the old V0 
++                # and prevents issues with CUDA graphs/Triton.
++                "enforce_eager": True, 
+             }
+             
+             # V100 specific optimization
+@@ -241,7 +241,7 @@ class LocalLLaMA(LLM):
+                 logger.info(f"Using {quantization} quantization.")
+             
+             # Set the maximum model length
+-            vllm_kwargs["max_model_len"] = 10000
++            vllm_kwargs["max_model_len"] = 2048
+             
+             # Add other user-defined parameters
+             vllm_kwargs.update(kwargs)
+@@ -1112,4 +1112,4 @@ if __name__ == "__main__":
+         import traceback
+         print(f"Error details: {traceback.format_exc()}")
+         if 'llm' in locals():
+-            llm.shutdown()
+\ No newline at end of file
++            llm.shutdown()

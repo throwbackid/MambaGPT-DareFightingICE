@@ -1,0 +1,66 @@
+# Local configuration and credentials
+.DS_Store
+__MACOSX/
+.env
+.env.*
+*.pem
+*.key
+
+# Python environments and caches
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+
+# Local data, model artifacts, and outputs
+data/
+work/
+checkpoints/
+outputs/
+wandb/
+/dagger_analysis/
+*.jsonl
+*.safetensors
+*.pt
+*.pth
+*.bin
+*.zip
+*.rar
+*.dat
+*.jar
+
+# Private reports and handover materials
+private-evidence/
+HANDOVER.md
+FILE_INVENTORY.md
+SOURCE_SELECTION.md
+PUBLISHING_REVIEW.md
+REPOSITORY_BUILD_PLAN.md
+inventory.json
+inventory.csv
+*.pdf
+*.docx
+*.pptx
+*.xlsx
+
+# Small, intentionally published dataset samples
+!datasets/samples/**/*.jsonl
+models/
+qwen_ftg_*/
+
+# Private report files also stay excluded from sample directories.
+*[Ww]eek*[Rr]eport*
+reports/
+*.doc
+*.docm
+*.odt
+*.ppt
+*.odp
+*.xls
+*.ods
+EDITORIAL_DECISIONS.md
+PUBLICATION_UPDATE.md
+START_HERE.md
+dataset-file-audit.json
+dataset-schema-audit.json

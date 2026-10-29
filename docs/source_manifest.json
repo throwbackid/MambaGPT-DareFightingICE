@@ -1,0 +1,126 @@
+{
+  "format_version": 1,
+  "scope": "Current repository Python source and workflow tools. Hashes cover exact file bytes.",
+  "files": [
+    {
+      "path": "src/evaluation/analyze_v8.py",
+      "sha256": "9a58156776ca6b1c1d34f18e1a1346060b19d4c08512122ec8df419e25e1c2e4",
+      "bytes": 25446
+    },
+    {
+      "path": "src/evaluation/count_action_labels.py",
+      "sha256": "7b1d3f55b8f1549600bc2da5a4359b5d1d557d8e53520ad7c0afd176101f6f62",
+      "bytes": 3881
+    },
+    {
+      "path": "src/evaluation/evaluate_match_csvs.py",
+      "sha256": "7e049da48806651a61a9bc8d21a3b4f726f5cb817209cf39eaa351a0bfdca962",
+      "bytes": 6366
+    },
+    {
+      "path": "src/evaluation/evaluate_qwen_repo_adapter.py",
+      "sha256": "cf3d860f1668789f9dcf4f796216bd8c43ca32456fa6410def3672636621b571",
+      "bytes": 10026
+    },
+    {
+      "path": "src/evaluation/evaluate_qwen_repo_merged.py",
+      "sha256": "24c4accd996a6452024ce9484a977e554ade825518e89f4ea6c5d0c54833cbe8",
+      "bytes": 9700
+    },
+    {
+      "path": "src/evaluation/visualize_datasets.py",
+      "sha256": "bd30e449235586904e925fedc5eeff3b52936a7c53759a1ba6491c2561137897",
+      "bytes": 3176
+    },
+    {
+      "path": "src/preprocessing/clean_dataset_v5.py",
+      "sha256": "72836c4ae7204cab2608f1e25792b0bcd332dc21e74faee28ecbef92d8531d75",
+      "bytes": 10052
+    },
+    {
+      "path": "src/preprocessing/clean_rushdown_v3.py",
+      "sha256": "69bba38e840e416d2f99ecd23dac95a743a9096a90fb48ba406e81385d3067ce",
+      "bytes": 8128
+    },
+    {
+      "path": "src/preprocessing/clean_rushdown_v6.py",
+      "sha256": "975738c2a1cfc9c89a9de2391306562ba99b21dd8ee31a21213e38ce4fd32c8b",
+      "bytes": 8433
+    },
+    {
+      "path": "src/preprocessing/clean_rushdown_v8.py",
+      "sha256": "034b4d867f77675409208a5585774507c168beada4a8d966e7c781cdf340b0ec",
+      "bytes": 10827
+    },
+    {
+      "path": "src/preprocessing/clean_zoning_v3.py",
+      "sha256": "c0bcc24579da0f2b29fc8dbc19a62cdda0c7acb0944c48d6b7c3ddd164ac189f",
+      "bytes": 8694
+    },
+    {
+      "path": "src/preprocessing/clean_zoning_v4.py",
+      "sha256": "8c750009df06095f6c6ee85d4289058e29874cf461840283f791704a8983e208",
+      "bytes": 7632
+    },
+    {
+      "path": "src/preprocessing/export_huggingface.py",
+      "sha256": "9faf5f7e7df90005cc36d149cd608c02e1d717257ba036a0935413af79383c35",
+      "bytes": 1356
+    },
+    {
+      "path": "src/preprocessing/powerlaw_shrink_jsonl.py",
+      "sha256": "403983ff32a9b580274a8d4c5235b870a95a2a504f70960d34f582729025174d",
+      "bytes": 5505
+    },
+    {
+      "path": "src/preprocessing/rebalance_dataset_v5.py",
+      "sha256": "9f5743a7f84502eac4e95fcdf6e11158d29537adcd428d7f83033c786aaaa695",
+      "bytes": 14624
+    },
+    {
+      "path": "src/preprocessing/rebalance_rushdown_v3.py",
+      "sha256": "5604830063b4e4ae44c516458b129c6ff01c8e64213681bfd7bb1b895c88a54a",
+      "bytes": 7349
+    },
+    {
+      "path": "src/preprocessing/rebalance_zoning_v3.py",
+      "sha256": "a1cef16139e042bff9e78ab453abf14c4427cc0948876cbc78daeb7d876d132d",
+      "bytes": 7525
+    },
+    {
+      "path": "src/preprocessing/repair_zoning_v4.py",
+      "sha256": "c0d1ca0831c2cd71ae64970c0746c01808a163bd9c7fa3b518b9a9a98dc54447",
+      "bytes": 9082
+    },
+    {
+      "path": "src/preprocessing/split_database_v3.py",
+      "sha256": "1dac7fd7c76880809da059fe9b0f336967fbb410e4d1d5a38084b566ee6fa063",
+      "bytes": 3900
+    },
+    {
+      "path": "src/training/build_qwen_plain_action_base.py",
+      "sha256": "a08c937a9129137aabfce76ddb6ef0c246ff819a3f86865dd9da910966ef2164",
+      "bytes": 2165
+    },
+    {
+      "path": "src/training/config.py",
+      "sha256": "6052ba24d8de48742f358a240ee49186d310a7ea72b99a8bea7b0b55b8f933ff",
+      "bytes": 2436
+    },
+    {
+      "path": "src/training/export_qwen_repo_merged_untied.py",
+      "sha256": "6f283ce03336d2bbbaf9d9797b32289fa544712bef87f1f967bd42829ae367c7",
+      "bytes": 4941
+    },
+    {
+      "path": "src/training/train_qwen_repo_causal_lm.py",
+      "sha256": "2092db2f794e31085522b77770523a08a7a5b0f5e849d6cc7c0df91fd6aaf7f9",
+      "bytes": 16877
+    },
+    {
+      "path": "tools/sample_datasets.py",
+      "sha256": "4401920d320bb79499aa647f55f7e55311bbbe37c35ae7c61d6c2bf19de07cd7",
+      "bytes": 9583
+    }
+  ]
+}

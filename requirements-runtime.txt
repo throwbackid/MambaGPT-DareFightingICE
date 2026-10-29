@@ -1,0 +1,13 @@
+# Imports used by the external FightingLLM runtime and launchers.
+# Match vLLM/PyTorch/CUDA versions to the runtime environment.
+torch
+transformers
+vllm
+pyftg
+typer
+typing_extensions
+python-dotenv
+loguru
+numpy
+pandas
+openai

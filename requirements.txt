@@ -1,0 +1,10 @@
+# Model training and evaluation
+torch
+transformers
+peft
+accelerate
+bitsandbytes
+
+# Optional dataset export and visualization utilities
+datasets
+matplotlib

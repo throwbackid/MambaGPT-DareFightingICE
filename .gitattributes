@@ -1,0 +1,9 @@
+# Preserve Python line endings for consistent source hashes.
+*.py -text whitespace=cr-at-eol
+*.csv text eol=lf
+
+# Unified patches contain intentional context-line whitespace.
+*.patch -whitespace
+
+# Raw dataset samples retain their original line formatting.
+*.jsonl -text -whitespace
